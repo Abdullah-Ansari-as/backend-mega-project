@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "a mega backend project",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,5 +12,9 @@
     "backend"
   ],
   "author": "Abdullah",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "prettier": "^3.4.1"
+  }
 }
