@@ -1,0 +1,23 @@
+// 1-st approch of utility function
+const asyncHandler = (requestHandler) => {
+    (req, res, next) => {
+        Promise.resolve(requestHandler(req, res, next))
+        .catch((err) => next(err))
+    }
+}
+
+export {asyncHandler}
+
+
+
+// 2-nd approch of same (asyncHandler) utility function
+// const asyncHandler = (fn) => async (req, res, next) => {
+//     try {
+        
+//     } catch (error) {
+//         res.status(err.code || 500).json({
+//             success: false,
+//             message: error.message
+//         })
+//     }
+// }
