@@ -12,8 +12,9 @@ router.route("/register").post(
 	// this is middleware
 	upload.fields([
 		{ name: "avatar", maxCount: 1 },
-		{ name: "coverImage", maxCount: 1 }]),
+		{ name: "coverImage", maxCount: 1 }
+	]),
 	userRegister // and this is my controller
-) 
+)
 
 export default router

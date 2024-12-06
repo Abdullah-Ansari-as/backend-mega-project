@@ -30,20 +30,27 @@ const userRegister = asyncHandler(async (req, res) => {
 	// It takes an array of conditions, and if any one of the conditions is true,
 	// the query will match the document.
 	// mean k agr dono ma se ik b match ho gya to user return kr de ga.
-	const existedUser = User.findOne({ $or: [{ username }, { email }] })
+	const existedUser = await User.findOne({ $or: [{ username }, { email }] })
 	if (existedUser) {
 		throw new ApiError(409, "User with email or username already exists")
 	}
 
-	const avatarLocalPath = req.files?.avatar[0]?.path;
-	const coverImageLocalPath = req.files?.coverImage[0]?.path;
+	// console.log(req.files)
 
+	const avatarLocalPath = req.files?.avatar[0]?.path;
+	// const coverImageLocalPath = req.files?.coverImage[0]?.path; // agr user ne coverimage na di to is code se error a skta hai. [avatarLocalPath] ka validation bad ma check kr rha hain.
+	let coverImageLocalPath;
+	if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+		coverImageLocalPath = req.files.coverImage[0].path
+	}
+	
 	if(!avatarLocalPath) {
 		throw new ApiError(400, "Avatar file is requierd!")
 	}
 
 	const avatar = await uploadOnCloudinary(avatarLocalPath)
 	const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+	// console.log(avatar)
 
 	if(!avatar) {
 		throw new ApiError(400, "Avatar file is requierd!")
@@ -52,7 +59,7 @@ const userRegister = asyncHandler(async (req, res) => {
 	const user = await User.create({
 		fullName,
 		avatar: avatar.url,
-		coverImageL: coverImage?.url || "",
+		coverImage: coverImage?.url || "",
 		email,
 		password,
 		username: username.toLowerCase()
@@ -64,7 +71,7 @@ const userRegister = asyncHandler(async (req, res) => {
 		throw new ApiError(500, "Something went wrong while registering the user")
 	}
 
-	return res.status(201),json(
+	return res.status(201).json(
 		new ApiResponse(200, createdUser, "User registered Successfully")
 	)
 	
